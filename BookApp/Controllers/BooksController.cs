@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BookApp.Data;
+using BookApp.Models;
 
 namespace BookApp.Controllers
 {
@@ -24,6 +25,23 @@ namespace BookApp.Controllers
                 return NotFound();
             
             return Ok(book);
+        }
+
+        [HttpPost]
+        public IActionResult CreateOneBook([FromBody] Book book)
+        {
+            try
+            {
+                if (book is null)
+                    return BadRequest();
+
+                ApplicationContext.Books.Add(book);
+                return StatusCode(201, book);
+            }
+            catch(Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
