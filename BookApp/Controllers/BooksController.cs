@@ -43,5 +43,22 @@ namespace BookApp.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("{id:int}")]
+        public IActionResult UpdateOneBook([FromRoute(Name = "id")] int id, [FromBody] Book book)
+        {
+            var result = ApplicationContext.Books.Find(x => x.Id.Equals(id));
+
+            if (result is null)
+                return NotFound();
+
+            if(id != book.Id)
+                return BadRequest();
+
+            ApplicationContext.Books.Remove(result);
+            book.Id = result.Id;
+            ApplicationContext.Books.Add(book);
+            return Ok(book);
+        }
     }
 }
